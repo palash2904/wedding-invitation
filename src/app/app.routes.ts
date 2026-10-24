@@ -6,7 +6,7 @@ export const routes: Routes = [
   {
     path: '',
     component: InvitationComponent,
-    title: 'Palash & Sonam — Royal Wedding Invitation'
+    title: 'Palash & Sonam — Wedding Invitation'
   },
   {
     path: 'admin',

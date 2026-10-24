@@ -137,7 +137,7 @@ const DAY_1_EVENTS: WeddingDay = {
       time: '4:00 PM',
       timeHi: 'दोपहर 4:00 बजे',
       title: 'Mamera',
-      titleHi: 'मामेरा (भात)',
+      titleHi: 'मामेरा',
       description: 'Traditional maternal blessing ceremony welcoming beloved family and gifts.',
       descriptionHi: 'मातृपक्ष की ओर से स्नेह, उपहार और मंगल आशीर्वाद के साथ निभाई जाने वाली पारंपरिक एवं शुभ रस्म।',
       iconType: 'gift',
