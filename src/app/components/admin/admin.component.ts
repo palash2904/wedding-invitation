@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AdminAuthService } from '../../services/admin-auth.service';
-import { InviteType, InvitedBySide, WeddingEvent } from '../../models/wedding-event.model';
+import { InviteType, InvitedBySide, WeddingCoupleInfo, WeddingEvent } from '../../models/wedding-event.model';
 import { WeddingDataService } from '../../services/wedding-data.service';
 
 @Component({
@@ -307,7 +307,7 @@ import { WeddingDataService } from '../../services/wedding-data.service';
                 <div class="card-header-badge reception">🍽️ 1. Reception Only</div>
                 <h3 class="card-title">Royal Reception & Dinner</h3>
                 <div class="card-schedule-pill">
-                  📅 Tuesday, 1 Dec 2026 • 7:00 PM onwards
+                  📅 Tuesday, 1 Dec 2026 • {{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'reception-bride' : 'reception-groom', 'en') || '7:00 PM onwards' }}
                 </div>
                 <p class="card-summary">
                   Curated for guests invited exclusively to the Evening Reception & Feast. Daytime ceremonies are hidden.
@@ -352,10 +352,10 @@ import { WeddingDataService } from '../../services/wedding-data.service';
                 <div class="card-header-badge dec1">💍 2. 1 December Full Day</div>
                 <h3 class="card-title">Complete Day 2 Celebrations</h3>
                 <div class="card-schedule-pill">
-                  📅 Tuesday, 1 Dec 2026 • 10:30 AM to Late Night
+                  📅 Tuesday, 1 Dec 2026 • {{ getEventTime('2026-12-01', 'engagement', 'en') || '10:30 AM' }} to Late Night
                 </div>
                 <p class="card-summary">
-                  Includes Engagement (10:30 AM), Haldi (1:00 PM), Var Nikasi (6:00 PM), and Reception (7:00 PM onwards).
+                  Includes Engagement ({{ getEventTime('2026-12-01', 'engagement', 'en') || '10:30 AM' }}), Haldi ({{ getEventTime('2026-12-01', 'haldi', 'en') || '1:00 PM' }}), {{ selectedSide() === 'bride' ? 'Mamera (' + (getEventTime('2026-12-01', 'mamera-bride', 'en') || '3:30 PM') + '), ' : '' }}Var Nikasi ({{ getEventTime('2026-12-01', 'var-nikasi', 'en') || '6:00 PM' }}), and Reception ({{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'reception-bride' : 'reception-groom', 'en') || '7:00 PM onwards' }}).
                 </p>
               </div>
 
@@ -1479,40 +1479,187 @@ export class AdminComponent {
     }
   }
 
+  public getEffectiveEvent(dateKey: string, eventId: string): WeddingEvent | null {
+    const key = `${dateKey}::${eventId}`;
+    const draft = this.eventDrafts[key];
+
+    const configs = this.weddingData.inviteConfigs();
+    const day = configs.both.days.find((d) => d.dateKey === dateKey);
+    const ev = day?.events.find((e) => e.id === eventId);
+
+    if (!ev && !draft) return null;
+
+    return {
+      id: eventId,
+      time: draft?.time?.trim() || ev?.time || '',
+      timeHi: draft?.timeHi?.trim() || ev?.timeHi || draft?.time?.trim() || ev?.time || '',
+      title: draft?.title?.trim() || ev?.title || '',
+      titleHi: draft?.titleHi?.trim() || ev?.titleHi || '',
+      venueName: draft?.venueName !== undefined && draft.venueName !== null ? draft.venueName.trim() : (ev?.venueName || ''),
+      venueNameHi: draft?.venueNameHi !== undefined && draft.venueNameHi !== null ? draft.venueNameHi.trim() : (ev?.venueNameHi || ''),
+      venueAddress: ev?.venueAddress || '',
+      venueAddressHi: ev?.venueAddressHi || '',
+      iconType: ev?.iconType || 'gift',
+      sideTag: ev?.sideTag
+    };
+  }
+
+  public getEventTime(dateKey: string, eventId: string, lang: 'en' | 'hi' = 'en'): string {
+    const ev = this.getEffectiveEvent(dateKey, eventId);
+    if (!ev) return '';
+    return lang === 'hi' ? (ev.timeHi || ev.time) : ev.time;
+  }
+
+  public getEventTitle(dateKey: string, eventId: string, lang: 'en' | 'hi' = 'en'): string {
+    const ev = this.getEffectiveEvent(dateKey, eventId);
+    if (!ev) return '';
+    return lang === 'hi' ? ev.titleHi : ev.title;
+  }
+
+  public getEffectiveCouple(): WeddingCoupleInfo {
+    const current = this.weddingData.couple();
+    return {
+      ...current,
+      groom: this.coupleDraft.groom?.trim() || current.groom,
+      groomHi: this.coupleDraft.groomHi?.trim() || current.groomHi,
+      bride: this.coupleDraft.bride?.trim() || current.bride,
+      brideHi: this.coupleDraft.brideHi?.trim() || current.brideHi,
+      venueName: this.coupleDraft.venueName?.trim() || current.venueName,
+      venueNameHi: this.coupleDraft.venueNameHi?.trim() || current.venueNameHi,
+      venueAddress: this.coupleDraft.venueAddress?.trim() || current.venueAddress,
+      venueAddressHi: this.coupleDraft.venueAddressHi?.trim() || current.venueAddressHi,
+    };
+  }
+
   public copyWhatsAppMessage(type: InviteType): void {
     if (typeof window === 'undefined') return;
 
     const isHi = this.messageLang() === 'hi';
+    const isBride = this.selectedSide() === 'bride';
     const guest = this.customGuestName.trim();
     const guestGreeting = guest
       ? (isHi ? `सादर आमंत्रण: *${guest}*\n\n` : `Cordially Invited: *${guest}*\n\n`)
       : '';
 
     const inviteUrl = this.getInviteUrl(type);
+    const couple = this.getEffectiveCouple();
     let messageText = '';
 
     if (type === 'reception') {
+      const receptionEvent = this.getEffectiveEvent('2026-12-01', isBride ? 'reception-bride' : 'reception-groom');
+      const receptionTimeHi = receptionEvent?.timeHi || (isBride ? 'सायं 7:00 बजे से' : 'सायं 6:00 बजे से');
+      const receptionTimeEn = receptionEvent?.time || (isBride ? '7:00 PM onwards' : '6:00 PM onwards');
+
       messageText = isHi
-        ? `✨ *शाही प्रीतिभोज निमंत्रण* ✨\n\n${guestGreeting}।। श्री गणेशाय नमः ।।\n\nपरमपिता परमात्मा की असीम कृपा से, *पलाश एवं सोनम* के शुभ विवाह के पावन उपलक्ष्य में आयोजित *शाही प्रीतिभोज (रिसेप्शन)* में आप सपरिवार सादर आमंत्रित हैं।\n\n📅 *दिनांक:* मंगलवार, 1 दिसंबर 2026\n🕖 *समय:* सायं 7:00 बजे से\n📍 *स्थान:* महावीर बाग, एयरपोर्ट रोड, अग्रसेन नगर, इंदौर (म.प्र. 452006)\n\nआपकी गरिमामयी उपस्थिति एवं पावन शुभाशीर्वाद हमारे लिए अत्यंत हर्ष का विषय होगी।\n\n💌 *डिजिटल निमंत्रण पत्र देखें:* \n${inviteUrl}`
-        : `✨ *Wedding Reception Invitation* ✨\n\n${guestGreeting}Together with their families, *Palash & Sonam* cordially invite you to celebrate their *Royal Wedding Reception & Dinner*!\n\n📅 *Date:* Tuesday, 1 December 2026\n🕖 *Time:* 7:00 PM onwards\n📍 *Venue:* Mahaveer Bagh, Airport Road, Agrasen Nagar, Indore (M.P. 452006)\n\n💌 *View Interactive Invitation:* \n${inviteUrl}`;
+        ? `✨ *शाही प्रीतिभोज निमंत्रण* ✨\n\n${guestGreeting}।। श्री गणेशाय नमः ।।\n\nपरमपिता परमात्मा की असीम कृपा से, *${couple.groomHi} एवं ${couple.brideHi}* के शुभ विवाह के पावन उपलक्ष्य में आयोजित *शाही प्रीतिभोज (रिसेप्शन)* में आप सपरिवार सादर आमंत्रित हैं।\n\n📅 *दिनांक:* मंगलवार, 1 दिसंबर 2026\n🕖 *समय:* ${receptionTimeHi}\n📍 *स्थान:* ${couple.venueNameHi}, ${couple.venueAddressHi}\n\nआपकी गरिमामयी उपस्थिति एवं पावन शुभाशीर्वाद हमारे लिए अत्यंत हर्ष का विषय होगी।\n\n💌 *डिजिटल निमंत्रण पत्र देखें:* \n${inviteUrl}`
+        : `✨ *Wedding Reception Invitation* ✨\n\n${guestGreeting}Together with their families, *${couple.groom} & ${couple.bride}* cordially invite you to celebrate their *Royal Wedding Reception & Dinner*!\n\n📅 *Date:* Tuesday, 1 December 2026\n🕖 *Time:* ${receptionTimeEn}\n📍 *Venue:* ${couple.venueName}, ${couple.venueAddress}\n\n💌 *View Interactive Invitation:* \n${inviteUrl}`;
     } else if (type === 'dec1') {
+      const evEngagement = this.getEffectiveEvent('2026-12-01', 'engagement');
+      const evHaldi = this.getEffectiveEvent('2026-12-01', 'haldi');
+      const evMameraBride = this.getEffectiveEvent('2026-12-01', 'mamera-bride');
+      const evVarNikasi = this.getEffectiveEvent('2026-12-01', 'var-nikasi');
+      const evReception = this.getEffectiveEvent('2026-12-01', isBride ? 'reception-bride' : 'reception-groom');
+
+      const dec1EventsListHi: string[] = [];
+      const dec1EventsListEn: string[] = [];
+
+      if (evEngagement) {
+        dec1EventsListHi.push(`• ${evEngagement.timeHi || evEngagement.time} — ${evEngagement.titleHi}`);
+        dec1EventsListEn.push(`• ${evEngagement.time} — ${evEngagement.title}`);
+      }
+      if (evHaldi) {
+        dec1EventsListHi.push(`• ${evHaldi.timeHi || evHaldi.time} — ${evHaldi.titleHi}`);
+        dec1EventsListEn.push(`• ${evHaldi.time} — ${evHaldi.title}`);
+      }
+      if (isBride && evMameraBride) {
+        dec1EventsListHi.push(`• ${evMameraBride.timeHi || evMameraBride.time} — ${evMameraBride.titleHi}`);
+        dec1EventsListEn.push(`• ${evMameraBride.time} — ${evMameraBride.title}`);
+      }
+      if (evVarNikasi) {
+        dec1EventsListHi.push(`• ${evVarNikasi.timeHi || evVarNikasi.time} — ${evVarNikasi.titleHi}`);
+        dec1EventsListEn.push(`• ${evVarNikasi.time} — ${evVarNikasi.title}`);
+      }
+      if (evReception) {
+        dec1EventsListHi.push(`• ${evReception.timeHi || evReception.time} — ${evReception.titleHi}`);
+        dec1EventsListEn.push(`• ${evReception.time} — ${evReception.title}`);
+      }
+
       messageText = isHi
-        ? `✨ *शुभ विवाह निमंत्रण* ✨\n\n${guestGreeting}।। श्री गणेशाय नमः ।।\n\n*पलाश एवं सोनम* के मांगलिक विवाह समारोह के पावन अवसर पर आप सपरिवार सादर आमंत्रित हैं।\n\n📅 *दिनांक:* मंगलवार, 1 दिसंबर 2026\n\n🌸 *मांगलिक कार्यक्रम:* \n• प्रातः 10:30 बजे — सगाई समारोह (रिंग सेरेमनी)\n• दोपहर 1:00 बजे — शुभ हल्दी उत्सव\n• सायं 6:00 बजे — वर निकासी (शाही बारात)\n• सायं 7:00 बजे से — स्वागत समारोह एवं रात्रिभोज\n\n📍 *स्थान:* महावीर बाग, एयरपोर्ट रोड, अग्रसेन नगर, इंदौर (म.प्र. 452006)\n\nइस शुभ अवसर पर पधारकर नवदंपति को अपना स्नेह एवं शुभाशीर्वाद प्रदान करें।\n\n💌 *डिजिटल निमंत्रण पत्र देखें:* \n${inviteUrl}`
-        : `✨ *Wedding Invitation* ✨\n\n${guestGreeting}Together with their families, *Palash & Sonam* invite you to celebrate their auspicious wedding ceremonies on *Tuesday, 1 December 2026*!\n\n📅 *Schedule:* \n• 10:30 AM — Engagement Ceremony\n• 1:00 PM — Haldi Ceremony\n• 6:00 PM — Var Nikasi (Royal Baraat)\n• 7:00 PM onwards — Reception & Dinner Feast\n\n📍 *Venue:* Mahaveer Bagh, Airport Road, Agrasen Nagar, Indore (M.P. 452006)\n\n💌 *View Interactive Invitation:* \n${inviteUrl}`;
+        ? `✨ *शुभ विवाह निमंत्रण* ✨\n\n${guestGreeting}।। श्री गणेशाय नमः ।।\n\n*${couple.groomHi} एवं ${couple.brideHi}* के मांगलिक विवाह समारोह के पावन अवसर पर आप सपरिवार सादर आमंत्रित हैं।\n\n📅 *दिनांक:* मंगलवार, 1 दिसंबर 2026\n\n🌸 *मांगलिक कार्यक्रम:* \n${dec1EventsListHi.join('\n')}\n\n📍 *स्थान:* ${couple.venueNameHi}, ${couple.venueAddressHi}\n\nइस शुभ अवसर पर पधारकर नवदंपति को अपना स्नेह एवं शुभाशीर्वाद प्रदान करें।\n\n💌 *डिजिटल निमंत्रण पत्र देखें:* \n${inviteUrl}`
+        : `✨ *Wedding Invitation* ✨\n\n${guestGreeting}Together with their families, *${couple.groom} & ${couple.bride}* invite you to celebrate their auspicious wedding ceremonies on *Tuesday, 1 December 2026*!\n\n📅 *Schedule:* \n${dec1EventsListEn.join('\n')}\n\n📍 *Venue:* ${couple.venueName}, ${couple.venueAddress}\n\n💌 *View Interactive Invitation:* \n${inviteUrl}`;
     } else {
-      const isBride = this.selectedSide() === 'bride';
+      const day1ListHi: string[] = [];
+      const day1ListEn: string[] = [];
 
-      const day1EventsHi = isBride
-        ? '• प्रातः 10:00 बजे — माता पूजन (गृह निवास: 45 नंदा नगर, इंदौर)'
-        : '• प्रातः 10:00 बजे — माता पूजन (गृह निवास: 31/8 वृंदावन कॉलोनी, इंदौर)\n• दोपहर 1:00 बजे — मामेरा [महावीर बाग]\n• सायं 7:00 बजे — महिला संगीत एवं सुरमयी संध्या [महावीर बाग]';
+      if (isBride) {
+        const evMata = this.getEffectiveEvent('2026-11-30', 'mata-poojan-bride');
+        if (evMata) {
+          const locHi = evMata.venueAddressHi || evMata.venueAddress || 'नंदा नगर, इंदौर';
+          const locEn = evMata.venueAddress || 'Nanda Nagar, Indore';
+          day1ListHi.push(`• ${evMata.timeHi || evMata.time} — ${evMata.titleHi} (गृह निवास: ${locHi})`);
+          day1ListEn.push(`• ${evMata.time} — ${evMata.title} (Residence: ${locEn})`);
+        }
+      } else {
+        const evMata = this.getEffectiveEvent('2026-11-30', 'mata-poojan-groom');
+        const evMamera = this.getEffectiveEvent('2026-11-30', 'mamera');
+        const evSangeet = this.getEffectiveEvent('2026-11-30', 'mahela-sangeet');
 
-      const day1EventsEn = isBride
-        ? '• 10:00 AM — Mata Poojan (Residence: 45 Nanda Nagar, Indore)'
-        : '• 10:00 AM — Mata Poojan (Residence: 31/8 Vrindavan Colony, Indore)\n• 1:00 PM — Mamera (Mahaveer Bagh)\n• 7:00 PM — Sangeet Night (Mahaveer Bagh)';
+        if (evMata) {
+          const locHi = evMata.venueAddressHi || '31/8 वृंदावन कॉलोनी, इंदौर';
+          const locEn = evMata.venueAddress || '31/8 Vrindavan Colony, Indore';
+          day1ListHi.push(`• ${evMata.timeHi || evMata.time} — ${evMata.titleHi} (गृह निवास: ${locHi})`);
+          day1ListEn.push(`• ${evMata.time} — ${evMata.title} (Residence: ${locEn})`);
+        }
+        if (evMamera) {
+          const locHi = evMamera.venueNameHi || 'महावीर बाग';
+          const locEn = evMamera.venueName || 'Mahaveer Bagh';
+          day1ListHi.push(`• ${evMamera.timeHi || evMamera.time} — ${evMamera.titleHi} [${locHi}]`);
+          day1ListEn.push(`• ${evMamera.time} — ${evMamera.title} (${locEn})`);
+        }
+        if (evSangeet) {
+          const locHi = evSangeet.venueNameHi || 'महावीर बाग';
+          const locEn = evSangeet.venueName || 'Mahaveer Bagh';
+          day1ListHi.push(`• ${evSangeet.timeHi || evSangeet.time} — ${evSangeet.titleHi} [${locHi}]`);
+          day1ListEn.push(`• ${evSangeet.time} — ${evSangeet.title} (${locEn})`);
+        }
+      }
+
+      const evEngagement = this.getEffectiveEvent('2026-12-01', 'engagement');
+      const evHaldi = this.getEffectiveEvent('2026-12-01', 'haldi');
+      const evMameraBride = this.getEffectiveEvent('2026-12-01', 'mamera-bride');
+      const evVarNikasi = this.getEffectiveEvent('2026-12-01', 'var-nikasi');
+      const evReception = this.getEffectiveEvent('2026-12-01', isBride ? 'reception-bride' : 'reception-groom');
+
+      const day2ListHi: string[] = [];
+      const day2ListEn: string[] = [];
+
+      const mainLocHi = couple.venueNameHi;
+      const mainLocEn = couple.venueName;
+
+      if (evEngagement) {
+        day2ListHi.push(`• ${evEngagement.timeHi || evEngagement.time} — ${evEngagement.titleHi} [${mainLocHi}]`);
+        day2ListEn.push(`• ${evEngagement.time} — ${evEngagement.title} (${mainLocEn})`);
+      }
+      if (evHaldi) {
+        day2ListHi.push(`• ${evHaldi.timeHi || evHaldi.time} — ${evHaldi.titleHi} [${mainLocHi}]`);
+        day2ListEn.push(`• ${evHaldi.time} — ${evHaldi.title} (${mainLocEn})`);
+      }
+      if (isBride && evMameraBride) {
+        day2ListHi.push(`• ${evMameraBride.timeHi || evMameraBride.time} — ${evMameraBride.titleHi} [${mainLocHi}]`);
+        day2ListEn.push(`• ${evMameraBride.time} — ${evMameraBride.title} (${mainLocEn})`);
+      }
+      if (evVarNikasi) {
+        day2ListHi.push(`• ${evVarNikasi.timeHi || evVarNikasi.time} — ${evVarNikasi.titleHi}`);
+        day2ListEn.push(`• ${evVarNikasi.time} — ${evVarNikasi.title}`);
+      }
+      if (evReception) {
+        day2ListHi.push(`• ${evReception.timeHi || evReception.time} — ${evReception.titleHi} [${mainLocHi}]`);
+        day2ListEn.push(`• ${evReception.time} — ${evReception.title} (${mainLocEn})`);
+      }
 
       messageText = isHi
-        ? `✨ *मांगलिक विवाह निमंत्रण* ✨\n\n${guestGreeting}।। श्री गणेशाय नमः ।।\n\n*पलाश एवं सोनम* के विवाह महोत्सव में आप सपरिवार सादर आमंत्रित हैं।\n\n🌸 *सोमवार, 30 नवंबर 2026:* \n${day1EventsHi}\n\n🌸 *मंगलवार, 1 दिसंबर 2026:* \n• प्रातः 10:30 बजे — सगाई समारोह [महावीर बाग]\n• दोपहर 1:00 बजे — मांगलिक हल्दी उत्सव [महावीर बाग]\n• सायं 6:00 बजे — वर निकासी (शाही बारात)\n• सायं 7:00 बजे से — स्वागत समारोह एवं रात्रिभोज [महावीर बाग]\n\n📍 *मुख्य विवाह स्थल:* महावीर बाग, एयरपोर्ट रोड, अग्रसेन नगर, इंदौर (म.प्र. 452006)\n\nआपकी गरिमामयी उपस्थिति से हमारे उत्सव की शोभा बढ़ेगी।\n\n💌 *डिजिटल निमंत्रण पत्र देखें:* \n${inviteUrl}`
-        : `✨ *Wedding Invitation* ✨\n\n${guestGreeting}Together with their families, *Palash & Sonam* invite you to celebrate their wedding festivities!\n\n🌸 *Monday, 30 November 2026:* \n${day1EventsEn}\n\n🌸 *Tuesday, 1 December 2026:* \n• 10:30 AM — Engagement Ceremony (Mahaveer Bagh)\n• 1:00 PM — Haldi Celebration (Mahaveer Bagh)\n• 6:00 PM — Var Nikasi (Baraat)\n• 7:00 PM onwards — Reception / Dinner (Mahaveer Bagh)\n\n📍 *Main Wedding Venue:* Mahaveer Bagh, Airport Road, Agrasen Nagar, Indore (M.P. 452006)\n\n💌 *View Interactive Invitation:* \n${inviteUrl}`;
+        ? `✨ *विवाह निमंत्रण* ✨\n\n${guestGreeting}।। श्री गणेशाय नमः ।।\n\n*${couple.groomHi} एवं ${couple.brideHi}* के विवाह महोत्सव में आप सपरिवार सादर आमंत्रित हैं।\n\n🌸 *सोमवार, 30 नवंबर 2026:* \n${day1ListHi.join('\n')}\n\n🌸 *मंगलवार, 1 दिसंबर 2026:* \n${day2ListHi.join('\n')}\n\n📍 *मुख्य विवाह स्थल:* ${couple.venueNameHi}, ${couple.venueAddressHi}\n\nआपकी गरिमामयी उपस्थिति से हमारे उत्सव की शोभा बढ़ेगी।\n\n💌 *डिजिटल निमंत्रण पत्र देखें:* \n${inviteUrl}`
+        : `✨ *Wedding Invitation* ✨\n\n${guestGreeting}Together with their families, *${couple.groom} & ${couple.bride}* invite you to celebrate their wedding festivities!\n\n🌸 *Monday, 30 November 2026:* \n${day1ListEn.join('\n')}\n\n🌸 *Tuesday, 1 December 2026:* \n${day2ListEn.join('\n')}\n\n📍 *Main Wedding Venue:* ${couple.venueName}, ${couple.venueAddress}\n\n💌 *View Interactive Invitation:* \n${inviteUrl}`;
     }
 
     if (typeof navigator !== 'undefined' && navigator.clipboard) {

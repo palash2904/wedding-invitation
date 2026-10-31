@@ -142,6 +142,8 @@ const DAY_1_EVENTS: WeddingDay = {
       descriptionHi: 'मातृपक्ष की ओर से स्नेह, उपहार और मंगल आशीर्वाद के साथ निभाई जाने वाली पारंपरिक एवं शुभ रस्म।',
       iconType: 'gift',
       sideTag: 'groom',
+      sideTagEn: "Groom's Side",
+      sideTagHi: 'वर पक्ष',
       venueName: 'Mahaveer Bagh',
       venueNameHi: 'महावीर बाग',
       venueAddress: 'Airport Road, Agrasen Nagar, Indore, Madhya Pradesh, 452006',
@@ -185,6 +187,8 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       descriptionHi: 'विवाह मंडप की स्थापना शुभ मुहूर्त में पूजन और मंगल गीतों के साथ की जाती है, जहाँ वैवाहिक जीवन के पवित्र संकल्प लिए जाएंगे।',
       iconType: 'gift',
       sideTag: 'bride',
+      sideTagEn: "Bride's Side",
+      sideTagHi: 'वधू पक्ष',
       venueName: 'Mahaveer Bagh',
       venueNameHi: 'महावीर बाग',
       venueAddress: 'Airport Road, Agrasen Nagar, Indore, Madhya Pradesh, 452006',
@@ -210,6 +214,23 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       description: 'Golden hues of turmeric, laughter, floral showers, and playful moments.',
       descriptionHi: 'पीली हल्दी की चमक, फूलों की बौछार, हंसी-खुशी और अपनों के साथ मस्ती से भरी एक रंगीन और यादगार रस्म।',
       iconType: 'haldi'
+    },
+    {
+      id: 'mamera-bride',
+      time: '3:30 PM',
+      timeHi: 'दोपहर 3:30 बजे',
+      title: 'Mamera',
+      titleHi: 'मामेरा',
+      description: 'Traditional maternal blessing ceremony welcoming beloved family and gifts.',
+      descriptionHi: 'मातृपक्ष की ओर से स्नेह, उपहार और मंगल आशीर्वाद के साथ निभाई जाने वाली पारंपरिक एवं शुभ रस्म।',
+      iconType: 'gift',
+      sideTag: 'bride',
+      sideTagEn: "Bride's Side",
+      sideTagHi: 'वधू पक्ष',
+      venueName: 'Mahaveer Bagh',
+      venueNameHi: 'महावीर बाग',
+      venueAddress: 'Airport Road, Agrasen Nagar, Indore, Madhya Pradesh, 452006',
+      venueAddressHi: 'एयरपोर्ट रोड, अग्रसेन नगर, इंदौर, मध्य प्रदेश, 452006'
     },
     {
       id: 'var-nikasi',
@@ -268,7 +289,7 @@ const DAY_RECEPTION_ONLY: WeddingDay = {
   events: [
     
     {
-      id: 'reception-only-groom',
+      id: 'reception-groom',
       time: '6:00 PM onwards',
       timeHi: 'सायं 6:00 बजे से',
       title: 'Reception / Dinner',
@@ -279,7 +300,7 @@ const DAY_RECEPTION_ONLY: WeddingDay = {
       sideTag: 'groom'
     },
     {
-      id: 'reception-only-bride',
+      id: 'reception-bride',
       time: '7:00 PM onwards',
       timeHi: 'सायं 7:00 बजे से',
       title: 'Reception / Dinner',
@@ -319,8 +340,8 @@ export const INVITE_CONFIGS: Record<InviteType, InviteConfig> = {
     weddingDatesEn: '1 December 2026',
     weddingDatesHi: '1 दिसंबर 2026',
     targetCountdownDate: '2026-12-01T10:30:00',
-    eventsSubheadingEn: 'An auspicious day of Engagement, Haldi, Var Nikasi & Royal Reception',
-    eventsSubheadingHi: 'सगाई, हल्दी, वर निकासी एवं स्वागत समारोह से सजा शुभ दिन',
+    eventsSubheadingEn: 'An auspicious day of Engagement, Haldi, Mamera, Var Nikasi & Royal Reception',
+    eventsSubheadingHi: 'सगाई, हल्दी, मामेरा, वर निकासी एवं स्वागत समारोह से सजा शुभ दिन',
     highlightDate1Num: 'TUE',
     highlightDate1Month: '01 Dec',
     highlightDate2Num: '01',
