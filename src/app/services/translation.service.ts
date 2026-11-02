@@ -26,7 +26,18 @@ export class TranslationService {
   
   public readonly activeConfig = computed<InviteConfig>(() => {
     const configs = this.weddingData.inviteConfigs();
-    return configs[this._inviteType()] || configs.both;
+    const baseConfig = configs[this._inviteType()] || configs.both;
+    const side = this._invitedBy();
+
+    if (side === 'bride') {
+      return {
+        ...baseConfig,
+        eventsSubheadingEn: baseConfig.eventsSubheadingEn?.replace(/Var Nikasi/gi, 'Barat Swagat'),
+        eventsSubheadingHi: baseConfig.eventsSubheadingHi?.replace(/वर निकासी/g, 'बारात स्वागत'),
+        highlightTaglineHi: baseConfig.highlightTaglineHi?.replace(/वर निकासी/g, 'बारात स्वागत')
+      };
+    }
+    return baseConfig;
   });
 
   public readonly t = computed<WeddingTranslations>(() => TRANSLATIONS[this._lang()]);

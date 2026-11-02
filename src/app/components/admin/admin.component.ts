@@ -251,7 +251,7 @@ import { WeddingDataService } from '../../services/wedding-data.service';
                 <div class="editor-event-card" *ngFor="let ev of day.events">
                   <div class="editor-event-head">
                     <span class="editor-event-name">{{ ev.title }}</span>
-                    <span *ngIf="ev.sideTagEn" class="editor-event-tag">{{ ev.sideTagEn }}</span>
+                    <span *ngIf="ev.sideTagEn || ev.sideTag" class="editor-event-tag" [class.groom]="ev.sideTag === 'groom'" [class.bride]="ev.sideTag === 'bride'">{{ ev.sideTagEn || (ev.sideTag === 'groom' ? "Groom's Side" : "Bride's Side") }}</span>
                   </div>
                   <div class="editor-grid">
                     <label class="editor-field">
@@ -355,7 +355,7 @@ import { WeddingDataService } from '../../services/wedding-data.service';
                   📅 Tuesday, 1 Dec 2026 • {{ getEventTime('2026-12-01', 'engagement', 'en') || '10:30 AM' }} to Late Night
                 </div>
                 <p class="card-summary">
-                  Includes Engagement ({{ getEventTime('2026-12-01', 'engagement', 'en') || '10:30 AM' }}), Haldi ({{ getEventTime('2026-12-01', 'haldi', 'en') || '1:00 PM' }}), {{ selectedSide() === 'bride' ? 'Mamera (' + (getEventTime('2026-12-01', 'mamera-bride', 'en') || '3:30 PM') + '), ' : '' }}Var Nikasi ({{ getEventTime('2026-12-01', 'var-nikasi', 'en') || '6:00 PM' }}), and Reception ({{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'reception-bride' : 'reception-groom', 'en') || '7:00 PM onwards' }}).
+                  Includes Engagement ({{ getEventTime('2026-12-01', 'engagement', 'en') || '10:30 AM' }}), Haldi ({{ getEventTime('2026-12-01', 'haldi', 'en') || '1:00 PM' }}), {{ selectedSide() === 'bride' ? 'Mamera (' + (getEventTime('2026-12-01', 'mamera-bride', 'en') || '3:30 PM') + '), ' : '' }}{{ selectedSide() === 'bride' ? 'Barat Swagat (' + (getEventTime('2026-12-01', 'barat-swagat', 'en') || '6:00 PM') + ')' : 'Var Nikasi (' + (getEventTime('2026-12-01', 'var-nikasi', 'en') || '6:00 PM') + ')' }}, and Reception ({{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'reception-bride' : 'reception-groom', 'en') || '7:00 PM onwards' }}).
                 </p>
               </div>
 
@@ -1557,7 +1557,9 @@ export class AdminComponent {
       const evEngagement = this.getEffectiveEvent('2026-12-01', 'engagement');
       const evHaldi = this.getEffectiveEvent('2026-12-01', 'haldi');
       const evMameraBride = this.getEffectiveEvent('2026-12-01', 'mamera-bride');
-      const evVarNikasi = this.getEffectiveEvent('2026-12-01', 'var-nikasi');
+      const evProcession = isBride
+        ? (this.getEffectiveEvent('2026-12-01', 'barat-swagat') || this.getEffectiveEvent('2026-12-01', 'var-nikasi'))
+        : this.getEffectiveEvent('2026-12-01', 'var-nikasi');
       const evReception = this.getEffectiveEvent('2026-12-01', isBride ? 'reception-bride' : 'reception-groom');
 
       const dec1EventsListHi: string[] = [];
@@ -1575,9 +1577,9 @@ export class AdminComponent {
         dec1EventsListHi.push(`• ${evMameraBride.timeHi || evMameraBride.time} — ${evMameraBride.titleHi}`);
         dec1EventsListEn.push(`• ${evMameraBride.time} — ${evMameraBride.title}`);
       }
-      if (evVarNikasi) {
-        dec1EventsListHi.push(`• ${evVarNikasi.timeHi || evVarNikasi.time} — ${evVarNikasi.titleHi}`);
-        dec1EventsListEn.push(`• ${evVarNikasi.time} — ${evVarNikasi.title}`);
+      if (evProcession) {
+        dec1EventsListHi.push(`• ${evProcession.timeHi || evProcession.time} — ${evProcession.titleHi}`);
+        dec1EventsListEn.push(`• ${evProcession.time} — ${evProcession.title}`);
       }
       if (evReception) {
         dec1EventsListHi.push(`• ${evReception.timeHi || evReception.time} — ${evReception.titleHi}`);
@@ -1627,7 +1629,9 @@ export class AdminComponent {
       const evEngagement = this.getEffectiveEvent('2026-12-01', 'engagement');
       const evHaldi = this.getEffectiveEvent('2026-12-01', 'haldi');
       const evMameraBride = this.getEffectiveEvent('2026-12-01', 'mamera-bride');
-      const evVarNikasi = this.getEffectiveEvent('2026-12-01', 'var-nikasi');
+      const evProcession = isBride
+        ? (this.getEffectiveEvent('2026-12-01', 'barat-swagat') || this.getEffectiveEvent('2026-12-01', 'var-nikasi'))
+        : this.getEffectiveEvent('2026-12-01', 'var-nikasi');
       const evReception = this.getEffectiveEvent('2026-12-01', isBride ? 'reception-bride' : 'reception-groom');
 
       const day2ListHi: string[] = [];
@@ -1648,9 +1652,9 @@ export class AdminComponent {
         day2ListHi.push(`• ${evMameraBride.timeHi || evMameraBride.time} — ${evMameraBride.titleHi} [${mainLocHi}]`);
         day2ListEn.push(`• ${evMameraBride.time} — ${evMameraBride.title} (${mainLocEn})`);
       }
-      if (evVarNikasi) {
-        day2ListHi.push(`• ${evVarNikasi.timeHi || evVarNikasi.time} — ${evVarNikasi.titleHi}`);
-        day2ListEn.push(`• ${evVarNikasi.time} — ${evVarNikasi.title}`);
+      if (evProcession) {
+        day2ListHi.push(`• ${evProcession.timeHi || evProcession.time} — ${evProcession.titleHi}`);
+        day2ListEn.push(`• ${evProcession.time} — ${evProcession.title}`);
       }
       if (evReception) {
         day2ListHi.push(`• ${evReception.timeHi || evReception.time} — ${evReception.titleHi} [${mainLocHi}]`);
