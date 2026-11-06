@@ -240,7 +240,19 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       titleHi: 'वर निकासी',
       description: 'The royal groom procession accompanied by traditional festive fanfare.',
       descriptionHi: 'ढोल-नगाड़ों और बैंड-बाजे की गूंज के साथ, दूल्हे की भव्य वर निकासी का शुभ प्रस्थान।',
-      iconType: 'horse'
+      iconType: 'horse',
+      sideTag: 'groom'
+    },
+    {
+      id: 'barat-swagat',
+      time: '7:00 PM',
+      timeHi: 'सायं 7:00 बजे',
+      title: 'Barat Swagat',
+      titleHi: 'बारात स्वागत',
+      description: 'A grand and joyous welcome to the groom and the Barat procession with warm traditional hospitality.',
+      descriptionHi: 'ढोल-नगाड़ों और बैंड-बाजे के साथ पधारी भव्य बारात एवं दूल्हे का आत्मीयता व पारंपरिक रीति-रिवाजों से स्वागत।',
+      iconType: 'horse',
+      sideTag: 'bride'
     },
     {
       id: 'reception-groom',
