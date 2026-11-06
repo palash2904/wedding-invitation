@@ -196,12 +196,12 @@ import { WeddingDataService } from '../../services/wedding-data.service';
               </p>
             </div>
 
-            <button type="button" class="edit-toggle-btn" (click)="isEditorOpen.set(!isEditorOpen())">
+           <!--  <button type="button" class="edit-toggle-btn" (click)="isEditorOpen.set(!isEditorOpen())">
               <span>{{ isEditorOpen() ? '▲ Hide Editor' : '▼ Open Editor' }}</span>
               <span *ngIf="weddingData.hasOverrides()" class="edited-dot" title="Unsaved-to-code edits are live"
                 >● edited</span
               >
-            </button>
+            </button> -->
 
             <div *ngIf="isEditorOpen()" class="editor-body">
               <!-- Couple & Venue -->
