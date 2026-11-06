@@ -352,10 +352,10 @@ import { WeddingDataService } from '../../services/wedding-data.service';
                 <div class="card-header-badge dec1">💍 2. 1 December Full Day</div>
                 <h3 class="card-title">Complete Day 2 Celebrations</h3>
                 <div class="card-schedule-pill">
-                  📅 Tuesday, 1 Dec 2026 • {{ getEventTime('2026-12-01', 'engagement', 'en') || '10:30 AM' }} to Late Night
+                  📅 Tuesday, 1 Dec 2026 • {{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'mandap' : 'engagement', 'en') || (selectedSide() === 'bride' ? '8:00 AM' : '10:30 AM') }} to Late Night
                 </div>
                 <p class="card-summary">
-                  Includes Engagement ({{ getEventTime('2026-12-01', 'engagement', 'en') || '10:30 AM' }}), Haldi ({{ getEventTime('2026-12-01', 'haldi', 'en') || '1:00 PM' }}), {{ selectedSide() === 'bride' ? 'Mamera (' + (getEventTime('2026-12-01', 'mamera-bride', 'en') || '3:30 PM') + '), ' : '' }}{{ selectedSide() === 'bride' ? 'Barat Swagat (' + (getEventTime('2026-12-01', 'barat-swagat', 'en') || '6:00 PM') + ')' : 'Var Nikasi (' + (getEventTime('2026-12-01', 'var-nikasi', 'en') || '6:00 PM') + ')' }}, and Reception ({{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'reception-bride' : 'reception-groom', 'en') || '7:00 PM onwards' }}).
+                  Includes {{ selectedSide() === 'bride' ? 'Mandap (' + (getEventTime('2026-12-01', 'mandap', 'en') || '8:00 AM') + '), ' : '' }}Engagement ({{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'engagement-bride' : 'engagement', 'en') || (selectedSide() === 'bride' ? '10:00 AM' : '10:30 AM') }}), {{ selectedSide() === 'bride' ? 'Phoolon Ki Haldi' : 'Haldi' }} ({{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'haldi-bride' : 'haldi', 'en') || (selectedSide() === 'bride' ? '12:00 PM' : '1:00 PM') }}), {{ selectedSide() === 'bride' ? 'Mamera (' + (getEventTime('2026-12-01', 'mamera-bride', 'en') || '3:30 PM') + '), ' : '' }}{{ selectedSide() === 'bride' ? 'Barat Swagat (' + (getEventTime('2026-12-01', 'barat-swagat', 'en') || '7:00 PM') + ')' : 'Var Nikasi (' + (getEventTime('2026-12-01', 'var-nikasi', 'en') || '6:00 PM') + ')' }}, Reception ({{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'reception-bride' : 'reception-groom', 'en') || '7:00 PM onwards' }}){{ selectedSide() === 'bride' ? ', and Shubh Lagn (' + (getEventTime('2026-12-01', 'shubh-lagn', 'en') || '12:30 AM') + ')' : '' }}.
                 </p>
               </div>
 
@@ -400,7 +400,9 @@ import { WeddingDataService } from '../../services/wedding-data.service';
                   📅 30 Nov & 1 Dec 2026 • Full Schedule
                 </div>
                 <p class="card-summary">
-                  Complete schedule: Mata Poojan (Groom & Bride), Mamera, Sangeet, Ring Ceremony, Haldi, Baraat & Royal Reception.
+                  {{ selectedSide() === 'bride'
+                    ? 'Complete schedule: Shree Ganesh Pujan, Mata Poojan & Chaak, Mandap, Engagement, Phoolon Ki Haldi, Mamera, Barat Swagat, Royal Reception & Shubh Lagn.'
+                    : 'Complete schedule: Mata Poojan, Chaak Pujan, Ganesh Pujan, Mandap, Mamera, Sangeet, Ring Ceremony, Haldi, Var Nikasi & Royal Reception.' }}
                 </p>
               </div>
 
@@ -1554,17 +1556,26 @@ export class AdminComponent {
         ? `✨ *शाही प्रीतिभोज निमंत्रण* ✨\n\n${guestGreeting}।। श्री गणेशाय नमः ।।\n\nपरमपिता परमात्मा की असीम कृपा से, *${couple.groomHi} एवं ${couple.brideHi}* के शुभ विवाह के पावन उपलक्ष्य में आयोजित *शाही प्रीतिभोज (रिसेप्शन)* में आप सपरिवार सादर आमंत्रित हैं।\n\n📅 *दिनांक:* मंगलवार, 1 दिसंबर 2026\n🕖 *समय:* ${receptionTimeHi}\n📍 *स्थान:* ${couple.venueNameHi}, ${couple.venueAddressHi}\n\nआपकी गरिमामयी उपस्थिति एवं पावन शुभाशीर्वाद हमारे लिए अत्यंत हर्ष का विषय होगी।\n\n💌 *डिजिटल निमंत्रण पत्र देखें:* \n${inviteUrl}`
         : `✨ *Wedding Reception Invitation* ✨\n\n${guestGreeting}Together with their families, *${couple.groom} & ${couple.bride}* cordially invite you to celebrate their *Royal Wedding Reception & Dinner*!\n\n📅 *Date:* Tuesday, 1 December 2026\n🕖 *Time:* ${receptionTimeEn}\n📍 *Venue:* ${couple.venueName}, ${couple.venueAddress}\n\n💌 *View Interactive Invitation:* \n${inviteUrl}`;
     } else if (type === 'dec1') {
-      const evEngagement = this.getEffectiveEvent('2026-12-01', 'engagement');
-      const evHaldi = this.getEffectiveEvent('2026-12-01', 'haldi');
-      const evMameraBride = this.getEffectiveEvent('2026-12-01', 'mamera-bride');
+      const isBride = this.selectedSide() === 'bride';
+      const evMandap = isBride ? this.getEffectiveEvent('2026-12-01', 'mandap') : null;
+      const evEngagement = this.getEffectiveEvent('2026-12-01', isBride ? 'engagement-bride' : 'engagement')
+        || this.getEffectiveEvent('2026-12-01', 'engagement');
+      const evHaldi = this.getEffectiveEvent('2026-12-01', isBride ? 'haldi-bride' : 'haldi')
+        || this.getEffectiveEvent('2026-12-01', 'haldi');
+      const evMameraBride = isBride ? this.getEffectiveEvent('2026-12-01', 'mamera-bride') : null;
       const evProcession = isBride
         ? (this.getEffectiveEvent('2026-12-01', 'barat-swagat') || this.getEffectiveEvent('2026-12-01', 'var-nikasi'))
         : this.getEffectiveEvent('2026-12-01', 'var-nikasi');
       const evReception = this.getEffectiveEvent('2026-12-01', isBride ? 'reception-bride' : 'reception-groom');
+      const evShubhLagn = isBride ? this.getEffectiveEvent('2026-12-01', 'shubh-lagn') : null;
 
       const dec1EventsListHi: string[] = [];
       const dec1EventsListEn: string[] = [];
 
+      if (evMandap) {
+        dec1EventsListHi.push(`• ${evMandap.timeHi || evMandap.time} — ${evMandap.titleHi}`);
+        dec1EventsListEn.push(`• ${evMandap.time} — ${evMandap.title}`);
+      }
       if (evEngagement) {
         dec1EventsListHi.push(`• ${evEngagement.timeHi || evEngagement.time} — ${evEngagement.titleHi}`);
         dec1EventsListEn.push(`• ${evEngagement.time} — ${evEngagement.title}`);
@@ -1573,7 +1584,7 @@ export class AdminComponent {
         dec1EventsListHi.push(`• ${evHaldi.timeHi || evHaldi.time} — ${evHaldi.titleHi}`);
         dec1EventsListEn.push(`• ${evHaldi.time} — ${evHaldi.title}`);
       }
-      if (isBride && evMameraBride) {
+      if (evMameraBride) {
         dec1EventsListHi.push(`• ${evMameraBride.timeHi || evMameraBride.time} — ${evMameraBride.titleHi}`);
         dec1EventsListEn.push(`• ${evMameraBride.time} — ${evMameraBride.title}`);
       }
@@ -1585,6 +1596,10 @@ export class AdminComponent {
         dec1EventsListHi.push(`• ${evReception.timeHi || evReception.time} — ${evReception.titleHi}`);
         dec1EventsListEn.push(`• ${evReception.time} — ${evReception.title}`);
       }
+      if (evShubhLagn) {
+        dec1EventsListHi.push(`• ${evShubhLagn.timeHi || evShubhLagn.time} — ${evShubhLagn.titleHi}`);
+        dec1EventsListEn.push(`• ${evShubhLagn.time} — ${evShubhLagn.title}`);
+      }
 
       messageText = isHi
         ? `✨ *शुभ विवाह निमंत्रण* ✨\n\n${guestGreeting}।। श्री गणेशाय नमः ।।\n\n*${couple.groomHi} एवं ${couple.brideHi}* के मांगलिक विवाह समारोह के पावन अवसर पर आप सपरिवार सादर आमंत्रित हैं।\n\n📅 *दिनांक:* मंगलवार, 1 दिसंबर 2026\n\n🌸 *मांगलिक कार्यक्रम:* \n${dec1EventsListHi.join('\n')}\n\n📍 *स्थान:* ${couple.venueNameHi}, ${couple.venueAddressHi}\n\nइस शुभ अवसर पर पधारकर नवदंपति को अपना स्नेह एवं शुभाशीर्वाद प्रदान करें।\n\n💌 *डिजिटल निमंत्रण पत्र देखें:* \n${inviteUrl}`
@@ -1594,10 +1609,17 @@ export class AdminComponent {
       const day1ListEn: string[] = [];
 
       if (isBride) {
+        const evGanesh = this.getEffectiveEvent('2026-11-30', 'ganesh-pujan-bride');
         const evMata = this.getEffectiveEvent('2026-11-30', 'mata-poojan-bride');
+        if (evGanesh) {
+          const locHi = evGanesh.venueAddressHi || evGanesh.venueAddress || '629/8 नंदा नगर, इंदौर';
+          const locEn = evGanesh.venueAddress || '629/8 Nanda Nagar, Indore';
+          day1ListHi.push(`• ${evGanesh.timeHi || evGanesh.time} — ${evGanesh.titleHi} (गृह निवास: ${locHi})`);
+          day1ListEn.push(`• ${evGanesh.time} — ${evGanesh.title} (Residence: ${locEn})`);
+        }
         if (evMata) {
-          const locHi = evMata.venueAddressHi || evMata.venueAddress || 'नंदा नगर, इंदौर';
-          const locEn = evMata.venueAddress || 'Nanda Nagar, Indore';
+          const locHi = evMata.venueAddressHi || evMata.venueAddress || '629/8 नंदा नगर, इंदौर';
+          const locEn = evMata.venueAddress || '629/8 Nanda Nagar, Indore';
           day1ListHi.push(`• ${evMata.timeHi || evMata.time} — ${evMata.titleHi} (गृह निवास: ${locHi})`);
           day1ListEn.push(`• ${evMata.time} — ${evMata.title} (Residence: ${locEn})`);
         }
@@ -1626,13 +1648,17 @@ export class AdminComponent {
         }
       }
 
-      const evEngagement = this.getEffectiveEvent('2026-12-01', 'engagement');
-      const evHaldi = this.getEffectiveEvent('2026-12-01', 'haldi');
-      const evMameraBride = this.getEffectiveEvent('2026-12-01', 'mamera-bride');
+      const evMandap = isBride ? this.getEffectiveEvent('2026-12-01', 'mandap') : null;
+      const evEngagement = this.getEffectiveEvent('2026-12-01', isBride ? 'engagement-bride' : 'engagement')
+        || this.getEffectiveEvent('2026-12-01', 'engagement');
+      const evHaldi = this.getEffectiveEvent('2026-12-01', isBride ? 'haldi-bride' : 'haldi')
+        || this.getEffectiveEvent('2026-12-01', 'haldi');
+      const evMameraBride = isBride ? this.getEffectiveEvent('2026-12-01', 'mamera-bride') : null;
       const evProcession = isBride
         ? (this.getEffectiveEvent('2026-12-01', 'barat-swagat') || this.getEffectiveEvent('2026-12-01', 'var-nikasi'))
         : this.getEffectiveEvent('2026-12-01', 'var-nikasi');
       const evReception = this.getEffectiveEvent('2026-12-01', isBride ? 'reception-bride' : 'reception-groom');
+      const evShubhLagn = isBride ? this.getEffectiveEvent('2026-12-01', 'shubh-lagn') : null;
 
       const day2ListHi: string[] = [];
       const day2ListEn: string[] = [];
@@ -1640,6 +1666,10 @@ export class AdminComponent {
       const mainLocHi = couple.venueNameHi;
       const mainLocEn = couple.venueName;
 
+      if (evMandap) {
+        day2ListHi.push(`• ${evMandap.timeHi || evMandap.time} — ${evMandap.titleHi} [${mainLocHi}]`);
+        day2ListEn.push(`• ${evMandap.time} — ${evMandap.title} (${mainLocEn})`);
+      }
       if (evEngagement) {
         day2ListHi.push(`• ${evEngagement.timeHi || evEngagement.time} — ${evEngagement.titleHi} [${mainLocHi}]`);
         day2ListEn.push(`• ${evEngagement.time} — ${evEngagement.title} (${mainLocEn})`);
@@ -1648,7 +1678,7 @@ export class AdminComponent {
         day2ListHi.push(`• ${evHaldi.timeHi || evHaldi.time} — ${evHaldi.titleHi} [${mainLocHi}]`);
         day2ListEn.push(`• ${evHaldi.time} — ${evHaldi.title} (${mainLocEn})`);
       }
-      if (isBride && evMameraBride) {
+      if (evMameraBride) {
         day2ListHi.push(`• ${evMameraBride.timeHi || evMameraBride.time} — ${evMameraBride.titleHi} [${mainLocHi}]`);
         day2ListEn.push(`• ${evMameraBride.time} — ${evMameraBride.title} (${mainLocEn})`);
       }
@@ -1659,6 +1689,10 @@ export class AdminComponent {
       if (evReception) {
         day2ListHi.push(`• ${evReception.timeHi || evReception.time} — ${evReception.titleHi} [${mainLocHi}]`);
         day2ListEn.push(`• ${evReception.time} — ${evReception.title} (${mainLocEn})`);
+      }
+      if (evShubhLagn) {
+        day2ListHi.push(`• ${evShubhLagn.timeHi || evShubhLagn.time} — ${evShubhLagn.titleHi} [${mainLocHi}]`);
+        day2ListEn.push(`• ${evShubhLagn.time} — ${evShubhLagn.title} (${mainLocEn})`);
       }
 
       messageText = isHi

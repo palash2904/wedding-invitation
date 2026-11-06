@@ -51,26 +51,29 @@ const DAY_1_EVENTS: WeddingDay = {
       id: 'ganesh-pujan-bride',
       time: '9:00 AM',
       timeHi: 'प्रातः 9:00 बजे',
-      title: 'Ganesh Pujan',
-      titleHi: 'गणेश पूजन',
-      description: 'Lord Ganesha is worshipped first to remove every obstacle and bless the wedding celebrations with success and happiness.',
-      descriptionHi: 'सभी विघ्नों को दूर करने और विवाह के हर कार्य को निर्विघ्न संपन्न कराने हेतु सर्वप्रथम श्री गणेश जी का पूजन किया जाता है।',
+      title: 'Shree Ganesh Pujan',
+      titleHi: 'श्री गणेश पूजन',
+      description: 'Auspicious commencement of the wedding ceremonies with prayers and offerings to Lord Ganesha for peace, prosperity and obstacle-free festivities.',
+      descriptionHi: 'समस्त विघ्नों के नाश और मंगलमय वैवाहिक उत्सव के लिए सर्वप्रथम भगवान श्री गणेश जी का विधि-विधान से पावन पूजन।',
       iconType: 'gift',
       sideTag: 'bride',
+      sideTagEn: "Bride's Side",
+      sideTagHi: 'वधू पक्ष',
       venueName: "Bride's Residence",
       venueNameHi: 'वधू गृह निवास',
       venueAddress: '629/8 Nanda Nagar, Indore',
       venueAddressHi: '629/8 नंदा नगर, इंदौर',
-      
+      venueMapUrl: 'https://maps.app.goo.gl/3ShGDYhz4nUwkNZUA',
+      venueMapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3679.6026659464637!2d75.8808765!3d22.7430052!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3962fd5c200aba6f%3A0x465f2d8c6551ebce!2s629%2F8%2C%20Rd%20Number%208%2C%20Nanda%20Nagar%2C%20Indore%2C%20Madhya%20Pradesh%20452011!5e0!3m2!1sen!2sin!4v1791096652306!5m2!1sen!2sin'
     },
     {
       id: 'mata-poojan-bride',
       time: '10:00 AM',
       timeHi: 'प्रातः 10:00 बजे',
-      title: 'Mata Poojan and Chaak',
+      title: 'Mata Poojan & Chaak',
       titleHi: 'माता पूजन एवं चाक',
       description: 'Seeking the blessings of the Divine Mother and the family deities for a joyful, prosperous and auspicious wedding.',
-      descriptionHi: 'माता रानी और कुलदेवी का आशीर्वाद लेकर, विवाह के मंगल कार्यों का शुभारंभ श्रद्धा और भक्ति भाव से किया जाता है।',
+      descriptionHi: 'माता रानी और कुलदेवी का आशीर्वाद लेकर चाक पूजन की पारंपरिक व मंगलमय रस्म, जो सुख, सौभाग्य और समृद्धि का प्रतीक है।',
       venueName: "Bride's Residence",
       venueNameHi: 'वधू गृह निवास',
       venueAddress: '629/8 Nanda Nagar, Indore',
@@ -182,9 +185,9 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       time: '8:00 AM',
       timeHi: 'प्रातः 8:00 बजे',
       title: 'Mandap',
-      titleHi: 'मंडप',
-      description: 'The wedding mandap is installed at an auspicious hour with prayers and folk songs, where the sacred vows of marriage will be taken.',
-      descriptionHi: 'विवाह मंडप की स्थापना शुभ मुहूर्त में पूजन और मंगल गीतों के साथ की जाती है, जहाँ वैवाहिक जीवन के पवित्र संकल्प लिए जाएंगे।',
+      titleHi: 'मण्डप',
+      description: 'The wedding mandap is installed at an auspicious hour with sacred prayers and traditional folk songs.',
+      descriptionHi: 'शुभ वेला में मांगलिक वैदिक मंत्रोच्चार और मंगल गीतों के साथ विवाह मण्डप का विधि-विधान से प्रतिष्ठापन।',
       iconType: 'gift',
       sideTag: 'bride',
       sideTagEn: "Bride's Side",
@@ -192,8 +195,20 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       venueName: 'Mahaveer Bagh',
       venueNameHi: 'महावीर बाग',
       venueAddress: 'Airport Road, Agrasen Nagar, Indore, Madhya Pradesh, 452006',
-      venueAddressHi: 'एयरपोर्ट रोड, अग्रसेन नगर, इंदौर, मध्य प्रदेश, 452006',
-      
+      venueAddressHi: 'एयरपोर्ट रोड, अग्रसेन नगर, इंदौर, मध्य प्रदेश, 452006'
+    },
+    {
+      id: 'engagement-bride',
+      time: '10:00 AM',
+      timeHi: 'प्रातः 10:00 बजे',
+      title: 'Engagement',
+      titleHi: 'सगाई समारोह',
+      description: 'Exchanging rings of love and eternal promises of companionship.',
+      descriptionHi: 'प्रेम और साथ के इस खूबसूरत रिश्ते को अंगूठियों के आदान-प्रदान और जीवनभर साथ निभाने के वादे के साथ मनाने का शुभ अवसर।',
+      iconType: 'ring',
+      sideTag: 'bride',
+      sideTagEn: "Bride's Side",
+      sideTagHi: 'वधू पक्ष'
     },
     {
       id: 'engagement',
@@ -203,7 +218,23 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       titleHi: 'सगाई समारोह',
       description: 'Exchanging rings of love and eternal promises of companionship.',
       descriptionHi: 'प्रेम और साथ के इस खूबसूरत रिश्ते को अंगूठियों के आदान-प्रदान और जीवनभर साथ निभाने के वादे के साथ मनाने का शुभ अवसर।',
-      iconType: 'ring'
+      iconType: 'ring',
+      sideTag: 'groom',
+      sideTagEn: "Groom's Side",
+      sideTagHi: 'वर पक्ष'
+    },
+    {
+      id: 'haldi-bride',
+      time: '12:00 PM',
+      timeHi: 'दोपहर 12:00 बजे',
+      title: 'Phoolon Ki Haldi',
+      titleHi: 'फूलों की हल्दी',
+      description: 'Golden hues of turmeric, laughter, floral showers, and playful moments.',
+      descriptionHi: 'पीली हल्दी की महक, फूलों की पंखुड़ियों की बौछार, हंसी-खुशी और अपनों के साथ आनंदमय उत्सव।',
+      iconType: 'haldi',
+      sideTag: 'bride',
+      sideTagEn: "Bride's Side",
+      sideTagHi: 'वधू पक्ष'
     },
     {
       id: 'haldi',
@@ -213,7 +244,10 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       titleHi: 'हल्दी उत्सव',
       description: 'Golden hues of turmeric, laughter, floral showers, and playful moments.',
       descriptionHi: 'पीली हल्दी की चमक, फूलों की बौछार, हंसी-खुशी और अपनों के साथ मस्ती से भरी एक रंगीन और यादगार रस्म।',
-      iconType: 'haldi'
+      iconType: 'haldi',
+      sideTag: 'groom',
+      sideTagEn: "Groom's Side",
+      sideTagHi: 'वर पक्ष'
     },
     {
       id: 'mamera-bride',
@@ -241,7 +275,9 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       description: 'The royal groom procession accompanied by traditional festive fanfare.',
       descriptionHi: 'ढोल-नगाड़ों और बैंड-बाजे की गूंज के साथ, दूल्हे की भव्य वर निकासी का शुभ प्रस्थान।',
       iconType: 'horse',
-      sideTag: 'groom'
+      sideTag: 'groom',
+      sideTagEn: "Groom's Side",
+      sideTagHi: 'वर पक्ष'
     },
     {
       id: 'barat-swagat',
@@ -252,7 +288,9 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       description: 'A grand and joyous welcome to the groom and the Barat procession with warm traditional hospitality.',
       descriptionHi: 'ढोल-नगाड़ों और बैंड-बाजे के साथ पधारी भव्य बारात एवं दूल्हे का आत्मीयता व पारंपरिक रीति-रिवाजों से स्वागत।',
       iconType: 'horse',
-      sideTag: 'bride'
+      sideTag: 'bride',
+      sideTagEn: "Bride's Side",
+      sideTagHi: 'वधू पक्ष'
     },
     {
       id: 'reception-groom',
@@ -263,7 +301,9 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       description: 'A sumptuous royal culinary feast to celebrate togetherness with family and friends.',
       descriptionHi: 'परिवार और स्नेहीजनों के साथ इस खुशी को साझा करने एवं नवदंपति को आशीर्वाद देने के लिए स्नेहपूर्वक आयोजित स्वागत समारोह एवं रात्रिभोज।',
       iconType: 'dining',
-      sideTag: 'groom'
+      sideTag: 'groom',
+      sideTagEn: "Groom's Side",
+      sideTagHi: 'वर पक्ष'
     },
     {
       id: 'reception-bride',
@@ -274,7 +314,22 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       description: 'A sumptuous royal culinary feast to celebrate togetherness with family and friends.',
       descriptionHi: 'परिवार और स्नेहीजनों के साथ इस खुशी को साझा करने एवं नवदंपति को आशीर्वाद देने के लिए स्नेहपूर्वक आयोजित स्वागत समारोह एवं रात्रिभोज।',
       iconType: 'dining',
-      sideTag: 'bride'
+      sideTag: 'bride',
+      sideTagEn: "Bride's Side",
+      sideTagHi: 'वधू पक्ष'
+    },
+    {
+      id: 'shubh-lagn',
+      time: '12:30 AM',
+      timeHi: 'रात्रि 12:30 बजे',
+      title: 'Shubh Lagn',
+      titleHi: 'शुभ लग्न',
+      description: 'The sacred wedding pheras and nuptials solemnized at the auspicious midnight hour.',
+      descriptionHi: 'शुभ लग्न वेला में अग्नि को साक्षी मानकर सात फेरे और जीवनभर साथ निभाने के सात पावन वचन।',
+      iconType: 'ring',
+      sideTag: 'bride',
+      sideTagEn: "Bride's Side",
+      sideTagHi: 'वधू पक्ष'
     }
   ]
 };

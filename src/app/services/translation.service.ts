@@ -32,8 +32,15 @@ export class TranslationService {
     if (side === 'bride') {
       return {
         ...baseConfig,
-        eventsSubheadingEn: baseConfig.eventsSubheadingEn?.replace(/Var Nikasi/gi, 'Barat Swagat'),
-        eventsSubheadingHi: baseConfig.eventsSubheadingHi?.replace(/वर निकासी/g, 'बारात स्वागत'),
+        targetCountdownDate: this._inviteType() === 'dec1'
+          ? '2026-12-01T08:00:00'
+          : (this._inviteType() === 'reception' ? '2026-12-01T19:00:00' : '2026-11-30T09:00:00'),
+        eventsSubheadingEn: this._inviteType() === 'dec1'
+          ? 'An auspicious day of Mandap, Engagement, Haldi, Mamera, Barat Swagat, Reception & Shubh Lagn'
+          : baseConfig.eventsSubheadingEn?.replace(/Var Nikasi/gi, 'Barat Swagat'),
+        eventsSubheadingHi: this._inviteType() === 'dec1'
+          ? 'मण्डप, सगाई, हल्दी, मामेरा, बारात स्वागत, स्वागत समारोह एवं शुभ लग्न से सजा पावन दिन'
+          : baseConfig.eventsSubheadingHi?.replace(/वर निकासी/g, 'बारात स्वागत'),
         highlightTaglineHi: baseConfig.highlightTaglineHi?.replace(/वर निकासी/g, 'बारात स्वागत')
       };
     }
@@ -77,36 +84,13 @@ export class TranslationService {
       dayNameHi: side === 'bride' && day.dateKey === '2026-11-30'
         ? 'प्रथम दिवस — शुभारंभ एवं माता पूजन'
         : day.dayNameHi,
-      events: day.events
-        .filter(event => !event.sideTag || event.sideTag === side)
-        .map(event => {
-          if (side === 'bride' && event.id === 'var-nikasi') {
-            return {
-              ...event,
-              title: event.title === 'Var Nikasi' ? 'Barat Swagat' : event.title.replace(/Var\s*Nikasi/gi, 'Barat Swagat'),
-              titleHi: event.titleHi === 'वर निकासी' ? 'बारात स्वागत' : event.titleHi.replace(/वर\s*निकासी/g, 'बारात स्वागत'),
-              description: event.description === 'The royal groom procession accompanied by traditional festive fanfare.'
-                ? 'Welcoming the groom and the grand wedding procession with warmth and traditional honor.'
-                : event.description,
-              descriptionHi: event.descriptionHi === 'ढोल-नगाड़ों और बैंड-बाजे की गूंज के साथ, दूल्हे की भव्य वर निकासी का शुभ प्रस्थान।'
-                ? 'दूल्हे एवं बारात का स्नेह, आदर और पारंपरिक रीति-रिवाजों के साथ भव्य स्वागत।'
-                : event.descriptionHi
-            };
-          }
-          return event;
-        })
+      events: day.events.filter(event => !event.sideTag || event.sideTag === side)
     }));
   });
 
-  public readonly eventsSubheading = computed(() => {
-    const raw = this._lang() === 'hi' ? this.activeConfig().eventsSubheadingHi : this.activeConfig().eventsSubheadingEn;
-    if (this._invitedBy() === 'bride') {
-      return this._lang() === 'hi'
-        ? raw.replace('वर निकासी', 'बारात स्वागत')
-        : raw.replace(/Var\s*Nikasi/gi, 'Barat Swagat');
-    }
-    return raw;
-  });
+  public readonly eventsSubheading = computed(() => 
+    this._lang() === 'hi' ? this.activeConfig().eventsSubheadingHi : this.activeConfig().eventsSubheadingEn
+  );
 
   private getInitialLang(): Language {
     if (typeof window !== 'undefined' && window.localStorage) {
