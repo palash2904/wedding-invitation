@@ -355,7 +355,7 @@ import { WeddingDataService } from '../../services/wedding-data.service';
                   📅 Tuesday, 1 Dec 2026 • {{ getEventTime('2026-12-01', 'engagement', 'en') || '10:30 AM' }} to Late Night
                 </div>
                 <p class="card-summary">
-                  Includes Engagement ({{ getEventTime('2026-12-01', 'engagement', 'en') || '10:30 AM' }}), Haldi ({{ getEventTime('2026-12-01', 'haldi', 'en') || '1:00 PM' }}), {{ selectedSide() === 'bride' ? 'Mamera (' + (getEventTime('2026-12-01', 'mamera-bride', 'en') || '3:30 PM') + '), ' : '' }}Var Nikasi ({{ getEventTime('2026-12-01', 'var-nikasi', 'en') || '6:00 PM' }}), and Reception ({{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'reception-bride' : 'reception-groom', 'en') || '7:00 PM onwards' }}).
+                  Includes Engagement ({{ getEventTime('2026-12-01', 'engagement', 'en') || '10:30 AM' }}), Haldi ({{ getEventTime('2026-12-01', 'haldi', 'en') || '1:00 PM' }}), {{ selectedSide() === 'bride' ? 'Mamera (' + (getEventTime('2026-12-01', 'mamera-bride', 'en') || '3:30 PM') + '), ' : '' }}{{ selectedSide() === 'bride' ? 'Barat Swagat' : 'Var Nikasi' }} ({{ getEventTime('2026-12-01', 'var-nikasi', 'en') || '6:00 PM' }}), and Reception ({{ getEventTime('2026-12-01', selectedSide() === 'bride' ? 'reception-bride' : 'reception-groom', 'en') || '7:00 PM onwards' }}).
                 </p>
               </div>
 
@@ -1576,8 +1576,14 @@ export class AdminComponent {
         dec1EventsListEn.push(`• ${evMameraBride.time} — ${evMameraBride.title}`);
       }
       if (evVarNikasi) {
-        dec1EventsListHi.push(`• ${evVarNikasi.timeHi || evVarNikasi.time} — ${evVarNikasi.titleHi}`);
-        dec1EventsListEn.push(`• ${evVarNikasi.time} — ${evVarNikasi.title}`);
+        const titleHi = isBride
+          ? (evVarNikasi.titleHi === 'वर निकासी' ? 'बारात स्वागत' : evVarNikasi.titleHi.replace(/वर\s*निकासी/g, 'बारात स्वागत'))
+          : evVarNikasi.titleHi;
+        const titleEn = isBride
+          ? (evVarNikasi.title === 'Var Nikasi' ? 'Barat Swagat' : evVarNikasi.title.replace(/Var\s*Nikasi/gi, 'Barat Swagat'))
+          : evVarNikasi.title;
+        dec1EventsListHi.push(`• ${evVarNikasi.timeHi || evVarNikasi.time} — ${titleHi}`);
+        dec1EventsListEn.push(`• ${evVarNikasi.time} — ${titleEn}`);
       }
       if (evReception) {
         dec1EventsListHi.push(`• ${evReception.timeHi || evReception.time} — ${evReception.titleHi}`);
@@ -1649,8 +1655,14 @@ export class AdminComponent {
         day2ListEn.push(`• ${evMameraBride.time} — ${evMameraBride.title} (${mainLocEn})`);
       }
       if (evVarNikasi) {
-        day2ListHi.push(`• ${evVarNikasi.timeHi || evVarNikasi.time} — ${evVarNikasi.titleHi}`);
-        day2ListEn.push(`• ${evVarNikasi.time} — ${evVarNikasi.title}`);
+        const titleHi = isBride
+          ? (evVarNikasi.titleHi === 'वर निकासी' ? 'बारात स्वागत' : evVarNikasi.titleHi.replace(/वर\s*निकासी/g, 'बारात स्वागत'))
+          : evVarNikasi.titleHi;
+        const titleEn = isBride
+          ? (evVarNikasi.title === 'Var Nikasi' ? 'Barat Swagat' : evVarNikasi.title.replace(/Var\s*Nikasi/gi, 'Barat Swagat'))
+          : evVarNikasi.title;
+        day2ListHi.push(`• ${evVarNikasi.timeHi || evVarNikasi.time} — ${titleHi}`);
+        day2ListEn.push(`• ${evVarNikasi.time} — ${titleEn}`);
       }
       if (evReception) {
         day2ListHi.push(`• ${evReception.timeHi || evReception.time} — ${evReception.titleHi} [${mainLocHi}]`);
