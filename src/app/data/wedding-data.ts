@@ -57,8 +57,8 @@ const DAY_1_EVENTS: WeddingDay = {
       descriptionHi: 'समस्त विघ्नों के नाश और मंगलमय वैवाहिक उत्सव के लिए सर्वप्रथम भगवान श्री गणेश जी का विधि-विधान से पावन पूजन।',
       iconType: 'gift',
       sideTag: 'bride',
-      sideTagEn: "Bride's Side",
-      sideTagHi: 'वधू पक्ष',
+      // sideTagEn: "Bride's Side",
+      // sideTagHi: 'वधू पक्ष',
       venueName: "Bride's Residence",
       venueNameHi: 'वधू गृह निवास',
       venueAddress: '629/8 Nanda Nagar, Indore',
@@ -82,8 +82,8 @@ const DAY_1_EVENTS: WeddingDay = {
       venueMapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3679.6026659464637!2d75.8808765!3d22.7430052!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3962fd5c200aba6f%3A0x465f2d8c6551ebce!2s629%2F8%2C%20Rd%20Number%208%2C%20Nanda%20Nagar%2C%20Indore%2C%20Madhya%20Pradesh%20452011!5e0!3m2!1sen!2sin!4v1791096652306!5m2!1sen!2sin',
       iconType: 'diya',
       sideTag: 'bride',
-      sideTagEn: "Bride's Side",
-      sideTagHi: 'वधू पक्ष'
+      // sideTagEn: "Bride's Side",
+      // sideTagHi: 'वधू पक्ष'
     },
     {
       id: 'chaak-pujan',
@@ -190,8 +190,8 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       descriptionHi: 'शुभ वेला में मांगलिक वैदिक मंत्रोच्चार और मंगल गीतों के साथ विवाह मण्डप का विधि-विधान से प्रतिष्ठापन।',
       iconType: 'gift',
       sideTag: 'bride',
-      sideTagEn: "Bride's Side",
-      sideTagHi: 'वधू पक्ष',
+      // sideTagEn: "Bride's Side",
+      // sideTagHi: 'वधू पक्ष',
       venueName: 'Mahaveer Bagh',
       venueNameHi: 'महावीर बाग',
       venueAddress: 'Airport Road, Agrasen Nagar, Indore, Madhya Pradesh, 452006',
@@ -207,8 +207,8 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       descriptionHi: 'प्रेम और साथ के इस खूबसूरत रिश्ते को अंगूठियों के आदान-प्रदान और जीवनभर साथ निभाने के वादे के साथ मनाने का शुभ अवसर।',
       iconType: 'ring',
       sideTag: 'bride',
-      sideTagEn: "Bride's Side",
-      sideTagHi: 'वधू पक्ष'
+      // sideTagEn: "Bride's Side",
+      // sideTagHi: 'वधू पक्ष'
     },
     {
       id: 'engagement',
@@ -233,8 +233,8 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       descriptionHi: 'पीली हल्दी की महक, फूलों की पंखुड़ियों की बौछार, हंसी-खुशी और अपनों के साथ आनंदमय उत्सव।',
       iconType: 'haldi',
       sideTag: 'bride',
-      sideTagEn: "Bride's Side",
-      sideTagHi: 'वधू पक्ष'
+      // sideTagEn: "Bride's Side",
+      // sideTagHi: 'वधू पक्ष'
     },
     {
       id: 'haldi',
@@ -259,8 +259,8 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       descriptionHi: 'मातृपक्ष की ओर से स्नेह, उपहार और मंगल आशीर्वाद के साथ निभाई जाने वाली पारंपरिक एवं शुभ रस्म।',
       iconType: 'gift',
       sideTag: 'bride',
-      sideTagEn: "Bride's Side",
-      sideTagHi: 'वधू पक्ष',
+      // sideTagEn: "Bride's Side",
+      // sideTagHi: 'वधू पक्ष',
       venueName: 'Mahaveer Bagh',
       venueNameHi: 'महावीर बाग',
       venueAddress: 'Airport Road, Agrasen Nagar, Indore, Madhya Pradesh, 452006',
@@ -289,8 +289,8 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       descriptionHi: 'ढोल-नगाड़ों और बैंड-बाजे के साथ पधारी भव्य बारात एवं दूल्हे का आत्मीयता व पारंपरिक रीति-रिवाजों से स्वागत।',
       iconType: 'horse',
       sideTag: 'bride',
-      sideTagEn: "Bride's Side",
-      sideTagHi: 'वधू पक्ष'
+      // sideTagEn: "Bride's Side",
+      // sideTagHi: 'वधू पक्ष'
     },
     {
       id: 'reception-groom',
@@ -315,8 +315,8 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       descriptionHi: 'परिवार और स्नेहीजनों के साथ इस खुशी को साझा करने एवं नवदंपति को आशीर्वाद देने के लिए स्नेहपूर्वक आयोजित स्वागत समारोह एवं रात्रिभोज।',
       iconType: 'dining',
       sideTag: 'bride',
-      sideTagEn: "Bride's Side",
-      sideTagHi: 'वधू पक्ष'
+      // sideTagEn: "Bride's Side",
+      // sideTagHi: 'वधू पक्ष'
     },
     {
       id: 'shubh-lagn',
@@ -328,8 +328,8 @@ const DAY_2_ALL_EVENTS: WeddingDay = {
       descriptionHi: 'शुभ लग्न वेला में अग्नि को साक्षी मानकर सात फेरे और जीवनभर साथ निभाने के सात पावन वचन।',
       iconType: 'ring',
       sideTag: 'bride',
-      sideTagEn: "Bride's Side",
-      sideTagHi: 'वधू पक्ष'
+      // sideTagEn: "Bride's Side",
+      // sideTagHi: 'वधू पक्ष'
     }
   ]
 };
